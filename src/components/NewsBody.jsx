@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react"
 import NewsCards from "./NewsCards";
 
-const NewsBody = () => {
+const NewsBody = ({ category }) => {
     const [articles, setArticles] = useState([]);
 
-    useEffect(() => {
-        const url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=3976346497f440eda89fe4f33c7bf394`;
+    const getNews = () => {
+        const url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=3976346497f440eda89fe4f33c7bf394`;
         fetch(url).then(response => response.json()).then(data => setArticles(data.articles));
-        console.log(articles);
-    }, []);
+    }
+
+    useEffect(() => {
+        getNews();
+    }, [category]);
     return (
         <>
             <h2 className="text-center my-3 py-2">Latest <span className="badge bg-secondary">News</span></h2>
