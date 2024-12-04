@@ -1,17 +1,31 @@
 import { useEffect, useState } from "react"
 import NewsCards from "./NewsCards";
+import Loading from "./Loading";
 
 const NewsBody = ({ category }) => {
     const [articles, setArticles] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const getNews = () => {
-        const url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=3976346497f440eda89fe4f33c7bf394`;
-        fetch(url).then(response => response.json()).then(data => setArticles(data.articles));
+    const getNews = async () => {
+        try {
+            const news = await fetch(`https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=3976346497f440eda89fe4f33c7bf394`);
+            const data = await news.json();
+            setArticles(data.articles);
+            setLoading(false);
+        } catch(error) {
+            setLoading(false);
+            console.log("Error occurred while fetching data from API: ", error);
+        }
     }
 
     useEffect(() => {
         getNews();
     }, [category]);
+
+    if(loading) {
+        return <Loading />
+    }
+
     return (
         <>
             <h2 className="text-center my-3 py-2">Latest <span className="badge bg-secondary">News</span></h2>
